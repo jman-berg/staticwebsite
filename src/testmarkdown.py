@@ -1,6 +1,6 @@
 import unittest
 
-from markdownparser import split_nodes_delimiter
+from markdownparser import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 from textnode import TextNode, TextType
 
 class TestParser(unittest.TestCase):
@@ -20,4 +20,8 @@ class TestParser(unittest.TestCase):
         new_node = split_nodes_delimiter([node], "_", TextType.ITALIC)
         self.assertEqual(new_node[1].text_type, TextType.ITALIC)
 
-
+class TestMarkdownImagesAndLinks(unittest.TestCase):
+    
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)")
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
