@@ -6,6 +6,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     for node in old_nodes:
         if node.text_type is not TextType.NORMAL:
             new_nodes.extend([node])
+            continue
         delimiter_count = node.text.count(delimiter)
         if delimiter_count % 2 > 0:
             raise Exception("This is not valid markdown, missing a closing delimiter.")
@@ -34,8 +35,9 @@ def split_nodes_links(old_nodes):
         links = extract_markdown_links(original_text)
 
         if len(links) == 0:
-            return new_nodes.extend([node])
-        
+            new_nodes.extend([node])
+            continue
+
         for anchor_text, url in links:
             sections = original_text.split(f"[{anchor_text}]({url})",1)
             text_node = TextNode(TEXT=sections[0], TEXT_TYPE=TextType.NORMAL)
@@ -45,7 +47,9 @@ def split_nodes_links(old_nodes):
             if link_node.text != "":
                 new_nodes.extend([link_node])
             original_text = sections[1]
-        return new_nodes
+        if original_text:
+            new_nodes.append(TextNode(original_text, TextType.NORMAL))
+    return new_nodes
 
 
 def split_nodes_images(old_nodes):
@@ -56,7 +60,8 @@ def split_nodes_images(old_nodes):
         links = extract_markdown_images(original_text)
 
         if len(links) == 0:
-            return new_nodes.extend([node])
+            new_nodes.extend([node])
+            continue
         
         for image_alt, image_link in links:
             sections = original_text.split(f"![{image_alt}]({image_link})",1)
@@ -67,5 +72,16 @@ def split_nodes_images(old_nodes):
             if link_node.text != "":
                 new_nodes.extend([link_node])
             original_text = sections[1]
+        if original_text:
+            new_nodes.append(TextNode(original_text, TextType.NORMAL))
     return new_nodes
+
+def text_to_textnodes(text):
+    original_text_node = [TextNode(TEXT=text, TEXT_TYPE=TextType.NORMAL)]
+    text_split_bold = split_nodes_delimiter(original_text_node, "**", TextType.BOLD)
+    text_split_italic = split_nodes_delimiter(text_split_bold, "_", TextType.ITALIC)
+    text_split_code = split_nodes_delimiter(text_split_italic, "`", TextType.CODE)
+    text_split_links = split_nodes_links(text_split_code)
+    text_split_images = split_nodes_images(text_split_links)
+    return text_split_images 
 
