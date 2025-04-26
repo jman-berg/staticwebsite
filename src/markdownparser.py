@@ -1,6 +1,6 @@
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 from htmlnode import HTMLNode, LeafNode, ParentNode
-from blocktypes import block_to_block_type
+from blocktypes import block_to_block_type, BlockType
 import re
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
@@ -97,7 +97,25 @@ def markdown_to_blocks(markdown):
 
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
+    html_nodes = []
     for block in blocks:
         block_type = block_to_block_type(block)
-        html_node = 
-        
+        if block_type != BlockType.CODE:
+            children = text_to_children(block)
+            parent_node = ParentNode(tag=block_type.value, children=children)
+            html_nodes.append(parent_node)
+        elif block_type == BlockType.CODE:
+            text_node = TextNode(TEXT=block, TEXT_TYPE=TextType.CODE)
+            html_node = text_node_to_html_node(text_node)
+            html_nodes.append(html_node)
+    return ParentNode(tag="div", children=html_nodes)
+            
+
+
+def text_to_children(text):
+    text_nodes = text_to_textnodes(text)
+    html_nodes = []
+    for node in text_nodes:
+        html_node= text_node_to_html_node(node)
+        html_nodes.append(html_node)
+    return html_nodes
