@@ -1,4 +1,6 @@
 from textnode import TextNode, TextType
+from htmlnode import HTMLNode, LeafNode, ParentNode
+from blocktypes import block_to_block_type
 import re
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
@@ -93,3 +95,9 @@ def markdown_to_blocks(markdown):
             stripped_strings.append(string.strip())
     return stripped_strings
 
+def markdown_to_html_node(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        html_node = 
+        
