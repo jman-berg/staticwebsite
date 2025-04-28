@@ -2,7 +2,7 @@ from enum import Enum
 import re
 
 class BlockType(Enum):
-    PARAGRAPH = "p"
+    PARAGRAPH = "paragraph"
     HEADING = "heading"
     CODE = "code"
     QUOTE = "quote"
@@ -11,13 +11,12 @@ class BlockType(Enum):
 
 def block_to_block_type(block):
     heading_regex = r"^#{1,6}\s+.*"
-    code_regex = r"^```(?:[^`\n]*```$|[\s\S]*?^```)"
     quote_regex = r"^>(?:.*(?:\n>.*)*)$"
     unordered_list_regex = r"^(?:-\s+.*(?:\n-\s+.*)*)$"
     ordered_list_regex = r"^(?:\d+\.\s+.*(?:\n\d+\.\s+.*)*)$"
     if re.match(heading_regex, block):
         return BlockType.HEADING
-    elif re.match(code_regex, block):
+    elif block.startswith("```") and block.endswith("```"):
         return BlockType.CODE
     elif re.match(quote_regex, block):
         return BlockType.QUOTE
