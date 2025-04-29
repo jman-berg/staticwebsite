@@ -1,6 +1,6 @@
 import unittest
 
-from markdownparser import markdown_to_blocks, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_images, split_nodes_links, text_to_textnodes, markdown_to_html_node
+from markdownparser import extract_title, markdown_to_blocks, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_images, split_nodes_links, text_to_textnodes, markdown_to_html_node
 from textnode import TextNode, TextType
 
 class TestParser(unittest.TestCase):
@@ -132,9 +132,20 @@ the **same** even with inline stuff
 
         node = markdown_to_html_node(md.strip())
         html = node.to_html()
-        print(html)
         self.assertEqual(
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+    def test_extract_title(self):
+        md = """
+        # This is the H1 header
+        ## This is not
+        this is just a new line
+        """
+        self.assertEqual(
+            extract_title(md), "This is the H1 header"
+        )
+        
+    
 

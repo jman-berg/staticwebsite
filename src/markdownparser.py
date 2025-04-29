@@ -155,3 +155,12 @@ def split_lists(text):
         new_lines.append(new_line)
         new_text = "\n".join(new_lines)
     return new_text
+
+def extract_title(markdown):
+    headers = re.findall(r"^#\s+.*", markdown.strip())
+    if not headers:
+        raise Exception("No H1 header found")
+    first_header = headers[0].strip("# ")
+    return first_header
+
+

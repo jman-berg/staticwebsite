@@ -1,16 +1,14 @@
 from os.path import isfile
 import os, shutil
+from page_generator import generate_page
 
 def copy_static(source_dir=None, destination_dir=None):
     if not source_dir or not destination_dir:
         current_directory = os.getcwd()
         destination_dir = f"{current_directory}/public"
         source_dir = f"{current_directory}/static"
-        print(destination_dir)
-        #shutil.rmtree(destination_dir)
-        #os.mkdir(destination_dir)
-    else:
-        return
+        shutil.rmtree(destination_dir)
+        os.mkdir(destination_dir)
     source_directories = os.listdir(source_dir)
     for item in source_directories:
         source_path = os.path.join(source_dir, item)
@@ -19,11 +17,11 @@ def copy_static(source_dir=None, destination_dir=None):
             shutil.copy(source_path, destination_path)
         else:
             os.mkdir(destination_path)
-            #copy_static(source_path, destination_path)
+            copy_static(source_path, destination_path)
 
 def main():
     copy_static()
-
+    generate_page("content/index.md", "template.html", "public/index.html")
 
 if __name__ == "__main__":
     main()
