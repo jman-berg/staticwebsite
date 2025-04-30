@@ -1,11 +1,14 @@
 from os.path import isfile
+import sys
 import os, shutil
-from page_generator import genereate_pages_recursive 
+from page_generator import generate_pages_recursive 
+
+base_path = sys.argv[0] or "/"
 
 def copy_static(source_dir=None, destination_dir=None):
     if not source_dir or not destination_dir:
         current_directory = os.getcwd()
-        destination_dir = f"{current_directory}/public"
+        destination_dir = f"{current_directory}/docs"
         source_dir = f"{current_directory}/static"
         shutil.rmtree(destination_dir)
         os.mkdir(destination_dir)
@@ -21,7 +24,7 @@ def copy_static(source_dir=None, destination_dir=None):
 
 def main():
     copy_static()
-    genereate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html", "docs", base_path)
 
 if __name__ == "__main__":
     main()
