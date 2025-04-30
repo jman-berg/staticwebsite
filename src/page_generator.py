@@ -16,7 +16,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
             title = extract_title(markdown_contents)
             html_template_updated = html_template.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
             html_template_update_href_basepath = html_template_updated.replace('href="/', f'href="{base_path}')
-            html_template_update_src_basepath = html_template_update_href_basepath.replace('href"/', f'href="{base_path}')
+            html_template_update_src_basepath = html_template_update_href_basepath.replace('src="/', f'src="{base_path}')
             with open(destination_path.replace(".md", ".html"), "w") as html_f:
                 html_f.write(html_template_update_src_basepath)
             print(f"saving... {destination_path}")
