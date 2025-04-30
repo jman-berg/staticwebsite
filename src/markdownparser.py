@@ -113,12 +113,12 @@ def markdown_to_html_node(markdown):
                 html_nodes.append(parent_node)
             case BlockType.HEADING:
                 no_hekkies = block.count("#")
-                stripped_block = block.strip("#")
+                stripped_block = block.strip("#").strip()
                 children = text_to_children(stripped_block)
                 parent_node = ParentNode(tag=f"h{no_hekkies}", children=children)
                 html_nodes.append(parent_node)
             case BlockType.QUOTE:
-                children = text_to_children(block)
+                children = text_to_children(block.strip(">").strip())
                 parent_node = ParentNode(tag="blockquote", children=children)
                 html_nodes.append(parent_node)
             case BlockType.UNORDERED_LIST:
@@ -149,8 +149,8 @@ def text_to_children(text):
 def split_lists(text):
     lines = text.split("\n")
     new_lines = []
-    for line in lines:
-        stripped_line = line.strip("- ")
+    for x in range(len(lines)):
+        stripped_line = lines[x].strip("- ").strip(f"{x+1}. ")
         new_line = f"<li>{stripped_line}</li>"
         new_lines.append(new_line)
         new_text = "\n".join(new_lines)

@@ -1,6 +1,6 @@
 from os.path import isfile
 import os, shutil
-from page_generator import generate_page
+from page_generator import genereate_pages_recursive 
 
 def copy_static(source_dir=None, destination_dir=None):
     if not source_dir or not destination_dir:
@@ -21,7 +21,7 @@ def copy_static(source_dir=None, destination_dir=None):
 
 def main():
     copy_static()
-    generate_page("content/index.md", "template.html", "public/index.html")
+    genereate_pages_recursive("content", "template.html", "public")
 
 if __name__ == "__main__":
     main()
