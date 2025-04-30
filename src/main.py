@@ -3,7 +3,8 @@ import sys
 import os, shutil
 from page_generator import generate_pages_recursive 
 
-base_path = sys.argv[0] or "/"
+base_path = sys.argv[1] or "/"
+print(base_path)
 
 def copy_static(source_dir=None, destination_dir=None):
     if not source_dir or not destination_dir:
